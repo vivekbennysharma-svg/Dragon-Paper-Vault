@@ -173,9 +173,11 @@ export default function App() {
                   <span style={{ fontWeight: '500' }}>{paper.name}</span>
                   <a 
                     href={`${API_BASE}/download?filepath=${encodeURIComponent(selSubject + '/' + selSchool + '/' + selClass + '/' + selYear + '/' + paper.rawName)}`}
+                    target="_blank" 
+                    rel="noreferrer"
                     style={{ background: '#2563eb', color: 'white', textDecoration: 'none', padding: '8px 16px', borderRadius: '6px', fontSize: '14px', fontWeight: 'bold' }}
                   >
-                    Download Native File
+                  View / Download File
                   </a>
                 </div>
               ))}
