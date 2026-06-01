@@ -116,7 +116,7 @@ export default function App() {
       <header style={{ textAlign: 'center', marginBottom: '40px' }}>
         <img src={logo} alt="Dragon Paper Vault Logo" style={{ height: '80px', marginBottom: '12px' }} />
         <h1 style={{ color: '#1e293b', margin: '0 0 8px 0' }}>Dragon Paper Vault</h1>
-        <p style={{ color: '#64748b' }}>Dropdown-filtered archive backed by a clean GitHub directory layout</p>
+        <p style={{ color: '#64748b' }}>Let us all impart our knowledge with everyone.</p>
       </header>
 
       {/* FILTER PANEL */}
@@ -191,6 +191,45 @@ export default function App() {
         </form>
         {uploadStatus && <p style={{ marginTop: '12px', color: '#047857', textAlign: 'center', fontWeight: 'bold' }}>{uploadStatus}</p>}
       </section>
+
+      {/* 4. NEW INTERACTIVE FOOTER SYSTEM */}
+      <footer style={{ backgroundColor: '#0f172a', color: '#94a3b8', padding: '40px 20px', borderTop: '4px solid #3b82f6', fontSize: '14px' }}>
+        <div style={{ maxWidth: '900px', margin: '0 auto', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', gap: '30px' }}>
+          
+          {/* Left Block - Title & Desc */}
+          <div style={{ flex: '1 1 250px' }}>
+            <h4 style={{ color: '#f8fafc', margin: '0 0 12px 0', fontSize: '16px' }}>🐉 Dragon Paper Vault</h4>
+            <p style={{ lineHeight: '1.6', margin: 0 }}>
+              An open, student-driven academic repository designed to preserve old examination sheets and question paper matrices transparently.
+            </p>
+          </div>
+
+          {/* Middle Block - Quick Links */}
+          <div style={{ flex: '1 1 150px' }}>
+            <h4 style={{ color: '#f8fafc', margin: '0 0 12px 0', fontSize: '16px' }}>Quick Navigation</h4>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '8px' }}>
+              <li><a href="#" style={{ color: '#cbd5e1', textDecoration: 'none' }} onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>Search Vault</a></li>
+              <li><a href="https://github.com" target="_blank" rel="noreferrer" style={{ color: '#cbd5e1', textDecoration: 'none' }}>GitHub Storage</a></li>
+              <li><a href="#" style={{ color: '#cbd5e1', textDecoration: 'none' }} onClick={(e) => e.preventDefault()}>Terms of Access</a></li>
+            </ul>
+          </div>
+
+          {/* Right Block - Dummy Contact Support Info */}
+          <div style={{ flex: '1 1 200px' }}>
+            <h4 style={{ color: '#f8fafc', margin: '0 0 12px 0', fontSize: '16px' }}>Support & Contact</h4>
+            <p style={{ margin: '0 0 6px 0' }}>📬 Email: <span style={{ color: '#cbd5e1' }}>support@dragonvault.edu</span></p>
+            <p style={{ margin: '0 0 6px 0' }}>🏢 Lab Location: Block-D, Academic Tech Wing</p>
+            <p style={{ margin: 0 }}>🛠️ Maintained by Core Platform Integrators</p>
+          </div>
+
+        </div>
+
+        {/* Bottom Horizontal Separation Rules & Copyright statement */}
+        <hr style={{ borderColor: '#334155', margin: '30px 0 20px 0' }} />
+        <div style={{ textAlign: 'center', fontSize: '12px', color: '#64748b' }}>
+          &copy; {new Date().getFullYear()} Dragon Paper Vault Archive Systems. All Rights Reserved. Powered by Serverless Cloud Operations.
+        </div>
+      </footer>
     </div>
   );
 }
