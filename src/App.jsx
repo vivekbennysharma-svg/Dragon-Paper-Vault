@@ -159,24 +159,21 @@ export default function App() {
         </div>
       </section>
 
-      {/* RESULT SHOWCASE */}
-      <section style={{ marginBottom: '40px' }}>
-        <h3 style={{ borderBottom: '2px solid #e2e8f0', paddingBottom: '8px' }}>📄 Available Documents</h3>
-        {!selYear ? (
-          <p style={{ color: '#94a3b8', textAlign: 'center', padding: '20px' }}>Please configure all dropdown filters above to locate files.</p>
-        ) : papers.length === 0 ? (
-          <p style={{ color: '#94a3b8' }}>No documents stored inside this specific folder path yet.</p>
-        ) : (
-          <div style={{ display: 'grid', gap: '12px' }}>
-            {papers.map((paper, idx) => (
-              <div key={idx} style={{ padding: '16px', border: '1px solid #e2e8f0', borderRadius: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontWeight: '500' }}>{paper.name}</span>
-                <a href={paper.downloadUrl} target="_blank" rel="noreferrer" style={{ background: '#2563eb', color: 'white', textDecoration: 'none', padding: '8px 16px', borderRadius: '6px', fontSize: '14px' }}>View / Download</a>
-              </div>
-            ))}
-          </div>
-        )}
-      </section>
+      {/* RESULT SHOWCASE MAP PIECE */}
+<div style={{ display: 'grid', gap: '12px' }}>
+  {papers.map((paper, idx) => (
+    <div key={idx} style={{ padding: '16px', border: '1px solid #e2e8f0', borderRadius: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#fff' }}>
+      <span style={{ fontWeight: '500' }}>{paper.name}</span>
+      {/* Point the path directly to our serverless download function stream utility */}
+      <a 
+        href={`${API_BASE}/download?filepath=${encodeURIComponent(selSubject + '/' + selSchool + '/' + selClass + '/' + selYear + '/' + paper.rawName)}`}
+        style={{ background: '#2563eb', color: 'white', textDecoration: 'none', padding: '8px 16px', borderRadius: '6px', fontSize: '14px', fontWeight: 'bold' }}
+      >
+        Download Native File
+      </a>
+    </div>
+  ))}
+</div>
 
       {/* UPLOAD FORM */}
       <section style={{ border: '1px solid #e2e8f0', borderRadius: '12px', padding: '24px', background: '#f8fafc' }}>
