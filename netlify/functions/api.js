@@ -31,6 +31,21 @@ const isValidBase64 = (str) => {
     }
 };
 
+// MIME type mapping
+const mimeTypes = {
+    '.pdf': 'application/pdf',
+    '.doc': 'application/msword',
+    '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    '.jpg': 'image/jpeg',
+    '.jpeg': 'image/jpeg',
+    '.png': 'image/png',
+    '.txt': 'text/plain',
+    '.xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    '.xls': 'application/vnd.ms-excel',
+    '.ppt': 'application/vnd.ms-powerpoint',
+    '.pptx': 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+};
+
 // 1. FIXED UPLOAD ROUTE FOR SERVERLESS
 app.post('/api/upload', async (req, res) => {
     try {
@@ -127,8 +142,12 @@ app.get('/api/download', async (req, res) => {
         const fileBuffer = Buffer.from(response.data.content, 'base64');
         const fileName = response.data.name;
         
+        // Get file extension and set appropriate MIME type
+        const fileExt = fileName.slice(fileName.lastIndexOf('.')).toLowerCase();
+        const contentType = mimeTypes[fileExt] || 'application/octet-stream';
+        
         res.set('Content-Disposition', `attachment; filename="${fileName}"`);
-        res.set('Content-Type', 'application/octet-stream');
+        res.set('Content-Type', contentType);
         res.send(fileBuffer);
     } catch (error) {
         if (error.response?.status === 404) {
