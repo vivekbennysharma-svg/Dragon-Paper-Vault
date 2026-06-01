@@ -112,4 +112,31 @@ app.get('/api/navigation', async (req, res) => {
     }
 });
 
+// 3. DOWNLOAD ROUTE
+app.get('/api/download', async (req, res) => {
+    try {
+        const { filepath } = req.query;
+        
+        if (!filepath) {
+            return res.status(400).json({ error: "Missing filepath parameter." });
+        }
+
+        const targetPath = `schools/${filepath}`;
+        const response = await axios.get(`${BASE_URL}/${targetPath}`, { headers });
+        
+        const fileBuffer = Buffer.from(response.data.content, 'base64');
+        const fileName = response.data.name;
+        
+        res.set('Content-Disposition', `attachment; filename="${fileName}"`);
+        res.set('Content-Type', 'application/octet-stream');
+        res.send(fileBuffer);
+    } catch (error) {
+        if (error.response?.status === 404) {
+            return res.status(404).json({ error: "File not found." });
+        }
+        console.error('Download error:', error.message);
+        res.status(500).json({ error: error.message });
+    }
+});
+
 module.exports.handler = serverless(app);
