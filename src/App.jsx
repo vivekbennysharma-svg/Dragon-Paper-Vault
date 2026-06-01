@@ -216,10 +216,9 @@ export default function App() {
 
           {/* Right Block - Dummy Contact Support Info */}
           <div style={{ flex: '1 1 200px' }}>
-            <h4 style={{ color: '#f8fafc', margin: '0 0 12px 0', fontSize: '16px' }}>Support & Contact</h4>
-            <p style={{ margin: '0 0 6px 0' }}>📬 Email: <span style={{ color: '#cbd5e1' }}>support@dragonvault.edu</span></p>
-            <p style={{ margin: '0 0 6px 0' }}>🏢 Lab Location: Block-D, Academic Tech Wing</p>
-            <p style={{ margin: 0 }}>🛠️ Maintained by Core Platform Integrators</p>
+            <h4 style={{ color: '#f8fafc', margin: '0 0 12px 0', fontSize: '16px' }}>Contact</h4>
+            <p style={{ margin: '0 0 6px 0' }}>📬 Email: <span style={{ color: '#cbd5e1' }}>vivekbennysharma@gmail.com</span></p>
+            <p style={{ margin: 0 }}>🛠️ Founded and Maintained by <b><a href="https://www.facebook.com/vivek.benny.sharma">Vivek Sharma</a></b></p>
           </div>
 
         </div>
