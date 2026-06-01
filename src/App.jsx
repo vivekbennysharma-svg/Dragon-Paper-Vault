@@ -78,23 +78,37 @@ export default function App() {
     e.preventDefault();
     if (!file || !upSub || !upSchool || !upClass || !upYear) return alert("Fill out all boxes!");
 
-    const formData = new FormData();
-    formData.append('paper', file);
-    formData.append('subject', upSub);
-    formData.append('school', upSchool);
-    formData.append('className', upClass);
-    formData.append('year', upYear);
+    setUploadStatus('Processing and uploading paper...');
 
-    setUploadStatus('Uploading paper structure...');
-    try {
-      await axios.post(`${API_BASE}/upload`, formData);
-      setUploadStatus('Paper filed successfully!');
-      setUpSub(''); setUpSchool(''); setUpClass(''); setUpYear(''); setFile(null);
-      // Refresh current view
-      fetchLevel('', setSubjects);
-    } catch (err) {
-      setUploadStatus('Upload failed: ' + err.message);
-    }
+    // Use FileReader to convert the selected document into a web-safe Base64 block
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = async () => {
+      const base64Data = reader.result.split(',')[1]; // Strips off content headers
+
+      const payload = {
+        subject: upSub,
+        school: upSchool,
+        className: upClass,
+        year: upYear,
+        fileName: file.name,
+        fileData: base64Data
+      };
+
+      try {
+        await axios.post(`${API_BASE}/upload`, payload, {
+          headers: { 'Content-Type': 'application/json' }
+        });
+        setUploadStatus('Paper filed successfully!');
+        setUpSub(''); setUpSchool(''); setUpClass(''); setUpYear(''); setFile(null);
+        
+        // Reset and trigger top level state list reload
+        const res = await axios.get(`${API_BASE}/navigation?path=`);
+        setSubjects(res.data);
+      } catch (err) {
+        setUploadStatus('Upload failed: ' + (err.response?.data?.error || err.message));
+      }
+    };
   };
 
   return (
