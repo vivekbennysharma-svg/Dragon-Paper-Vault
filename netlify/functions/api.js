@@ -1,13 +1,14 @@
 const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
-const serverless = require('serverless-http'); // Import the wrapper
+const serverless = require('serverless-http');
 
 const app = express();
 app.use(cors());
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// Increase payload parsing limit to handle files converted to base64 or JSON text
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 const OWNER = process.env.GITHUB_OWNER;
@@ -19,50 +20,47 @@ const headers = {
     Accept: "application/vnd.github+json"
 };
 
-// Helper to keep paths URL-safe
 const sanitize = (str) => str.trim().replace(/[^a-zA-Z0-9-_ ]/g, '').replace(/ /g, '_');
 
-// 1. UPLOAD A PAPER INTO NESTED FOLDERS
+// 1. FIXED UPLOAD ROUTE FOR SERVERLESS
 app.post('/api/upload', async (req, res) => {
     try {
-        if (!req.files || !req.files.paper) return res.status(400).send('No file uploaded.');
+        const { subject, school, className, year, fileName, fileData } = req.body;
         
-        const { subject, school, className, year } = req.body;
-        if (!subject || !school || !className || !year) {
-            return res.status(400).send('Missing required fields.');
+        // Ensure Netlify is receiving data
+        if (!subject || !school || !className || !year || !fileName || !fileData) {
+            return res.status(400).json({ error: "Missing required form fields or file details." });
         }
 
-        const file = req.files.paper;
-        const contentBase64 = file.data.toString('base64');
-
-        // Target path: schools/Subject/School_Name/Class/Year/filename.pdf
-        const targetPath = `schools/${sanitize(subject)}/${sanitize(school)}/${sanitize(className)}/${sanitize(year)}/${sanitize(file.name)}`;
+        // Target folder tree path structure
+        const targetPath = `schools/${sanitize(subject)}/${sanitize(school)}/${sanitize(className)}/${sanitize(year)}/${sanitize(fileName)}`;
 
         await axios.put(`${BASE_URL}/${targetPath}`, {
-            message: `Archived: ${file.name}`,
-            content: contentBase64
+            message: `Archived: ${fileName}`,
+            content: fileData // React will send this pre-encoded as a clean Base64 block
         }, { headers });
 
-        res.status(200).json({ message: "Paper uploaded successfully!" });
+        res.status(200).json({ message: "Paper successfully saved to GitHub archive!" });
     } catch (error) {
         res.status(500).json({ error: error.response?.data?.message || error.message });
     }
 });
 
-// 2. DYNAMIC NAVIGATION ENDPOINT FOR DROPDOWNS
+// 2. FIXED NAVIGATION ROUTE FOR SERVERLESS
 app.get('/api/navigation', async (req, res) => {
     const targetFolder = req.query.path ? `schools/${req.query.path}` : 'schools';
     try {
         const response = await axios.get(`${BASE_URL}/${targetFolder}`, { headers });
         
         const items = response.data.map(item => ({
-            name: item.name.replace(/_/g, ' '), // Pretty name for dropdowns
-            rawName: item.name,                // Folder name for API paths
-            type: item.type,                   // 'dir' or 'file'
+            name: item.name.replace(/_/g, ' '),
+            rawName: item.name,
+            type: item.type,
             downloadUrl: item.download_url
         }));
         res.status(200).json(items);
     } catch (error) {
+        // Safe check for missing directory targets
         if (error.response && error.response.status === 404) {
             return res.status(200).json([]);
         }
@@ -70,5 +68,4 @@ app.get('/api/navigation', async (req, res) => {
     }
 });
 
-const PORT = process.env.PORT || 3000;
 module.exports.handler = serverless(app);
