@@ -22,6 +22,15 @@ const headers = {
 
 const sanitize = (str) => str.trim().replace(/[^a-zA-Z0-9-_ ]/g, '').replace(/ /g, '_');
 
+// Validate base64 string
+const isValidBase64 = (str) => {
+    try {
+        return Buffer.from(str, 'base64').toString('base64') === str;
+    } catch (err) {
+        return false;
+    }
+};
+
 // 1. FIXED UPLOAD ROUTE FOR SERVERLESS
 app.post('/api/upload', async (req, res) => {
     try {
@@ -32,16 +41,50 @@ app.post('/api/upload', async (req, res) => {
             return res.status(400).json({ error: "Missing required form fields or file details." });
         }
 
-        // Target folder tree path structure
-        const targetPath = `schools/${sanitize(subject)}/${sanitize(school)}/${sanitize(className)}/${sanitize(year)}/${sanitize(fileName)}`;
+        // Validate base64 encoding
+        if (!isValidBase64(fileData)) {
+            return res.status(400).json({ error: "Invalid file data encoding. Expected base64." });
+        }
 
-        await axios.put(`${BASE_URL}/${targetPath}`, {
+        // Validate file extension
+        const allowedExtensions = ['.pdf', '.doc', '.docx', '.jpg', '.jpeg', '.png', '.txt', '.xlsx', '.xls', '.ppt', '.pptx'];
+        const fileExt = fileName.slice(fileName.lastIndexOf('.')).toLowerCase();
+        if (!fileExt || !allowedExtensions.includes(fileExt)) {
+            return res.status(400).json({ error: `File type not allowed. Allowed types: ${allowedExtensions.join(', ')}` });
+        }
+
+        // Target folder tree path structure - preserve filename, sanitize folders only
+        const targetPath = `schools/${sanitize(subject)}/${sanitize(school)}/${sanitize(className)}/${sanitize(year)}/${fileName}`;
+
+        let fileSha = null;
+
+        // Check if file already exists and get its SHA
+        try {
+            const existingFile = await axios.get(`${BASE_URL}/${targetPath}`, { headers });
+            fileSha = existingFile.data.sha;
+        } catch (error) {
+            // File doesn't exist (404), that's okay - we're creating it
+            if (error.response?.status !== 404) {
+                throw error;
+            }
+        }
+
+        // Upload/update the file
+        const uploadPayload = {
             message: `Archived: ${fileName}`,
-            content: fileData // React will send this pre-encoded as a clean Base64 block
-        }, { headers });
+            content: fileData
+        };
+
+        // Only include sha if file already exists
+        if (fileSha) {
+            uploadPayload.sha = fileSha;
+        }
+
+        await axios.put(`${BASE_URL}/${targetPath}`, uploadPayload, { headers });
 
         res.status(200).json({ message: "Paper successfully saved to GitHub archive!" });
     } catch (error) {
+        console.error('Upload error:', error.response?.data || error.message);
         res.status(500).json({ error: error.response?.data?.message || error.message });
     }
 });
@@ -64,6 +107,7 @@ app.get('/api/navigation', async (req, res) => {
         if (error.response && error.response.status === 404) {
             return res.status(200).json([]);
         }
+        console.error('Navigation error:', error.message);
         res.status(500).json({ error: error.message });
     }
 });
