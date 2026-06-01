@@ -127,7 +127,7 @@ app.get('/api/navigation', async (req, res) => {
     }
 });
 
-// 3. DOWNLOAD ROUTE
+// 3. DOWNLOAD ROUTE (Serverless Binary Fixed)
 app.get('/api/download', async (req, res) => {
     try {
         const { filepath } = req.query;
@@ -139,16 +139,28 @@ app.get('/api/download', async (req, res) => {
         const targetPath = `schools/${filepath}`;
         const response = await axios.get(`${BASE_URL}/${targetPath}`, { headers });
         
-        const fileBuffer = Buffer.from(response.data.content, 'base64');
         const fileName = response.data.name;
         
-        // Get file extension and set appropriate MIME type
+        // Get file extension and match its matching MIME contentType
         const fileExt = fileName.slice(fileName.lastIndexOf('.')).toLowerCase();
         const contentType = mimeTypes[fileExt] || 'application/octet-stream';
         
-        res.set('Content-Disposition', `attachment; filename="${fileName}"`);
-        res.set('Content-Type', contentType);
-        res.send(fileBuffer);
+        // IMPORTANT: For Netlify serverless environments, we keep the data 
+        // as a Base64 string instead of converting it into a raw binary buffer object.
+        const base64Content = response.data.content.replace(/\n/g, ''); 
+
+        // Send a custom raw response structure that forces Netlify to stream binary natively
+        return res.status(200).json({
+            statusCode: 200,
+            headers: {
+                'Content-Disposition': `inline; filename="${fileName}"`, // 'inline' allows modern browsers to view PDFs directly instead of forcing instant saving!
+                'Content-Type': contentType,
+                'Cache-Control': 'no-cache'
+            },
+            body: base64Content,
+            isBase64Encoded: true // This is the magic flag that fixes broken PDFs/images on Netlify!
+        });
+
     } catch (error) {
         if (error.response?.status === 404) {
             return res.status(404).json({ error: "File not found." });
