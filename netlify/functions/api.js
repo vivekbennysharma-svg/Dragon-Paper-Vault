@@ -68,32 +68,4 @@ app.get('/api/navigation', async (req, res) => {
     }
 });
 
-// 3. FIXED DOWNLOAD SYSTEM FOR SERVERLESS
-app.get('/api/download', async (req, res) => {
-    try {
-        const { filepath } = req.query;
-        if (!filepath) {
-            return res.status(400).json({ error: "Missing file path query parameter." });
-        }
-
-        // Fetch the file metadata and encoded contents straight from GitHub
-        const response = await axios.get(`${BASE_URL}/${filepath}`, { headers });
-        
-        // Extract the raw filename from the path
-        const filename = filepath.split('/').pop();
-        
-        // Convert GitHub's Base64 string back into a raw binary data buffer
-        const fileBuffer = Buffer.from(response.data.content, 'base64');
-
-        // Set explicit headers telling the browser exactly how to process the download file type
-        res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
-        res.setHeader('Content-Type', 'application/octet-stream');
-        
-        // Send the raw file buffer directly down the network pipe
-        res.send(fileBuffer);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
-
 module.exports.handler = serverless(app);
