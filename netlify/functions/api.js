@@ -1,5 +1,4 @@
 const express = require('express');
-const fileUpload = require('express-fileupload');
 const axios = require('axios');
 const cors = require('cors');
 const serverless = require('serverless-http'); // Import the wrapper
