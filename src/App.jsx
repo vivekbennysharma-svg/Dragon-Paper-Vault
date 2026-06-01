@@ -169,7 +169,7 @@ export default function App() {
           ) : (
             <div style={{ display: 'grid', gap: '12px' }}>
               {papers.map((paper, idx) => (
-                <div key={idx} style={{ padding: '16px', border: '1px solid #e2e8f0', borderRadius: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#fff' }}>
+                <div key={idx} style={{ padding: '16px', border: '1px solid #e2e8f0', borderRadius: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#ffffff' }}>
                   <span style={{ fontWeight: '500' }}>{paper.name}</span>
                   <a 
                     href={`${API_BASE}/download?filepath=${encodeURIComponent(selSubject + '/' + selSchool + '/' + selClass + '/' + selYear + '/' + paper.rawName)}`}
@@ -191,7 +191,7 @@ export default function App() {
           <input type="text" placeholder="Class (e.g., Class 11)" value={upClass} onChange={e => setUpClass(e.target.value)} style={{ padding: '10px', borderRadius: '6px' }} required />
           <input type="number" placeholder="Year (e.g., 2026)" value={upYear} onChange={e => setUpYear(e.target.value)} style={{ padding: '10px', borderRadius: '6px' }} required />
           <input type="file" onChange={e => setFile(e.target.files[0])} style={{ gridColumn: 'span 2' }} required />
-          <button type="submit" style={{ gridColumn: 'span 2', padding: '12px', background: '#10b981', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}>Upload to Folders</button>
+          <button type="submit" style={{ gridColumn: 'span 2', padding: '12px', background: '#10b981', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}>Submit</button>
         </form>
         {uploadStatus && <p style={{ marginTop: '12px', color: '#047857', textAlign: 'center', fontWeight: 'bold' }}>{uploadStatus}</p>}
       </section>
