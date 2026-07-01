@@ -129,45 +129,39 @@ app.get('/api/navigation', async (req, res) => {
 
 // 3. DOWNLOAD ROUTE (Serverless Binary Fixed)
 app.get('/api/download', async (req, res) => {
-    try {
-        const { filepath } = req.query;
-        
-        if (!filepath) {
-            return res.status(400).json({ error: "Missing filepath parameter." });
-        }
+  try {
+    const { filepath } = req.query;
 
-        const targetPath = `schools/${filepath}`;
-        const response = await axios.get(`${BASE_URL}/${targetPath}`, { headers });
-        
-        const fileName = response.data.name;
-        
-        // Get file extension and match its matching MIME contentType
-        const fileExt = fileName.slice(fileName.lastIndexOf('.')).toLowerCase();
-        const contentType = mimeTypes[fileExt] || 'application/octet-stream';
-        
-        // IMPORTANT: For Netlify serverless environments, we keep the data 
-        // as a Base64 string instead of converting it into a raw binary buffer object.
-        const base64Content = response.data.content.replace(/\n/g, ''); 
-
-        // Send a custom raw response structure that forces Netlify to stream binary natively
-        return res.status(200).json({
-            statusCode: 200,
-            headers: {
-                'Content-Disposition': `inline; filename="${fileName}"`, // 'inline' allows modern browsers to view PDFs directly instead of forcing instant saving!
-                'Content-Type': contentType,
-                'Cache-Control': 'no-cache'
-            },
-            body: base64Content,
-            isBase64Encoded: true // This is the magic flag that fixes broken PDFs/images on Netlify!
-        });
-
-    } catch (error) {
-        if (error.response?.status === 404) {
-            return res.status(404).json({ error: "File not found." });
-        }
-        console.error('Download error:', error.message);
-        res.status(500).json({ error: error.message });
+    if (!filepath) {
+      return res.status(400).json({ error: 'Missing filepath parameter.' });
     }
+
+    const targetPath = `schools/${filepath}`;
+
+    const meta = await axios.get(`${BASE_URL}/${targetPath}`, { headers });
+    const { name: fileName, download_url } = meta.data;
+
+    const fileExt = fileName.slice(fileName.lastIndexOf('.')).toLowerCase();
+    const contentType = mimeTypes[fileExt] || 'application/octet-stream';
+
+    const fileRes = await axios.get(download_url, {
+      headers,
+      responseType: 'arraybuffer'
+    });
+
+    res.set({
+      'Content-Disposition': `inline; filename="${fileName}"`,
+      'Content-Type': contentType,
+      'Cache-Control': 'no-cache'
+    });
+    return res.status(200).send(Buffer.from(fileRes.data));
+  } catch (error) {
+    if (error.response?.status === 404) {
+      return res.status(404).json({ error: 'File not found.' });
+    }
+    console.error('Download error:', error.message);
+    res.status(500).json({ error: error.message });
+  }
 });
 
 module.exports.handler = serverless(app);
