@@ -164,4 +164,4 @@ app.get('/api/download', async (req, res) => {
   }
 });
 
-module.exports.handler = serverless(app);
+module.exports.handler = serverless(app, {binary: true});
