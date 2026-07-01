@@ -224,7 +224,7 @@ export default function App() {
           <div style={{ flex: '1 1 200px' }}>
             <h4 style={{ color: '#f8fafc', margin: '0 0 12px 0', fontSize: '16px' }}>Contact</h4>
             <p style={{ margin: '0 0 6px 0' }}>📬 Email: <span style={{ color: '#cbd5e1' }}>vivekbennysharma@gmail.com</span></p>
-            <p style={{ margin: 0 }}>🛠️ Founded and Maintained by <b><a href="https://www.facebook.com/vivek.benny.sharma">Vivek Sharma</a></b></p>
+            <p style={{ margin: 0 }}>🛠️ Founded and Maintained by <b><a href="https://www.facebook.com/vivek.benny.sharma" target="_blank">Vivek Sharma</a></b></p>
           </div>
 
         </div>
