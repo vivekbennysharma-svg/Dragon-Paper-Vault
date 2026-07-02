@@ -70,6 +70,7 @@ body {
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 h1,
@@ -115,3 +116,9 @@ code {
   padding: 4px 8px;
   background: var(--code-bg);
 }
+
+a,
+a:visited,
+a:active {
+  color: inherit;
+  text-decoration: underline;
