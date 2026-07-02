@@ -197,10 +197,6 @@ export default function App() {
         </form>
         {uploadStatus && <p style={{ marginTop: '12px', color: '#047857', textAlign: 'center', fontWeight: 'bold' }}>{uploadStatus}</p>}
       </section>
-
-      
-
-        </div>
     {/* 4. NEW INTERACTIVE FOOTER SYSTEM */}
       <footer style={{ backgroundColor: '#0f172a', color: '#94a3b8', padding: '40px 20px', borderTop: '4px solid #3b82f6', fontSize: '14px' }}>
         <div style={{ maxWidth: '900px', margin: '0 auto', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', gap: '30px' }}>
@@ -234,6 +230,7 @@ export default function App() {
         <hr style={{ borderColor: '#334155', margin: '30px 0 20px 0' }} />
         <div style={{ textAlign: 'center', fontSize: '12px', color: '#64748b' }}>
           &copy; {new Date().getFullYear()} Dragon Paper Vault Archive Systems. All Rights Reserved. Powered by Serverless Cloud Operations.
+        </div>
         </div>
       </footer>
     </div>
