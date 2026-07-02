@@ -122,7 +122,7 @@ export default function App() {
       {/* FILTER PANEL */}
       <section style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '24px', marginBottom: '40px' }}>
         <h3 style={{ margin: '0 0 16px 0', color: '#334155' }}>🔍 Search Filters</h3>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '16px' }}>
           
           <div>
             <label style={{ display: 'block', fontSize: '12px', fontWeight: 'bold', marginBottom: '6px' }}>1. SUBJECT</label>
@@ -198,7 +198,10 @@ export default function App() {
         {uploadStatus && <p style={{ marginTop: '12px', color: '#047857', textAlign: 'center', fontWeight: 'bold' }}>{uploadStatus}</p>}
       </section>
 
-      {/* 4. NEW INTERACTIVE FOOTER SYSTEM */}
+      
+
+        </div>
+    {/* 4. NEW INTERACTIVE FOOTER SYSTEM */}
       <footer style={{ backgroundColor: '#0f172a', color: '#94a3b8', padding: '40px 20px', borderTop: '4px solid #3b82f6', fontSize: '14px' }}>
         <div style={{ maxWidth: '900px', margin: '0 auto', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', gap: '30px' }}>
           
@@ -226,8 +229,6 @@ export default function App() {
             <p style={{ margin: '0 0 6px 0' }}>📬 Email: <span style={{ color: '#cbd5e1' }}>vivekbennysharma@gmail.com</span></p>
             <p style={{ margin: 0 }}>🛠️ Founded and Maintained by <b><a href="https://www.facebook.com/vivek.benny.sharma" target="_blank">Vivek Sharma</a></b></p>
           </div>
-
-        </div>
 
         {/* Bottom Horizontal Separation Rules & Copyright statement */}
         <hr style={{ borderColor: '#334155', margin: '30px 0 20px 0' }} />
