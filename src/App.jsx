@@ -198,7 +198,7 @@ export default function App() {
         {uploadStatus && <p style={{ marginTop: '12px', color: '#047857', textAlign: 'center', fontWeight: 'bold' }}>{uploadStatus}</p>}
       </section>
     {/* 4. NEW INTERACTIVE FOOTER SYSTEM */}
-      <footer style={{ backgroundColor: '#0f172a', color: '#94a3b8', padding: '40px 20px', borderTop: '4px solid #3b82f6', fontSize: '14px' }}>
+      <footer style={{ backgroundColor: '#16171d', color: '#94a3b8', padding: '40px 20px', borderTop: '4px solid #3b82f6', fontSize: '14px' }}>
         <div style={{ maxWidth: '900px', margin: '0 auto', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', gap: '30px' }}>
           
           {/* Left Block - Title & Desc */}
