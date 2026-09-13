@@ -216,7 +216,7 @@ export default function App() {
             <h4 style={{ color: 'var(--text-h)', margin: '0 0 12px 0', fontSize: '16px' }}>Quick Navigation</h4>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '8px' }}>
               <li><a href="#"  onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>Search Vault</a></li>
-              <li><a href="https://github.com/vivekbennysharma-svg" target="_blank" rel="noreferrer" >GitHub Storage</a></li>
+              <li><a href="https://github.com" target="_blank" rel="noreferrer" >GitHub Storage</a></li>
               <li><a href="#" onClick={(e) => e.preventDefault()}>Terms of Access</a></li>
             </ul>
           </div>
